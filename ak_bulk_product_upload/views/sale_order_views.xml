@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sale_order_form_view_inherit" model="ir.ui.view">
+        <field name="name">sale.order.view.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header//button[@name='action_quotation_send']" position="after">
+                <button string="Bulk Product Upload" name="action_bulk_product_upload" type="object" invisible="state in ['cancel','sale']" class="oe_highlight"/>
+                <button string="Merge Order Lines" name="action_merge_order_lines" invisible="state in ['cancel','sale']" type="object" class="oe_highlight"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
