@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="inherit_view_id_inherit_module_name" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='quotation_order_setting_container']" position="inside">
+                <setting id="responsible_merge_operations" string="Merge Notification" help="Notify Merged Quotation">
+                    <field name="notify_partner_ids" widget="many2many_tags"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

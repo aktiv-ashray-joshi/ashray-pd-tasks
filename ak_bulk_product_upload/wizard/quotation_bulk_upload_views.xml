@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="quotation_bulk_upload_form_view" model="ir.ui.view">
+        <field name="name">quotation.bulk.upload.form.view</field>
+        <field name="model">quotation.bulk.upload</field>
+        <field name="arch" type="xml">
+            <form string="Bulk Product Upload">
+                <sheet>
+                    <group>
+                        <field name="line_ids">
+                            <list editable="bottom">
+                                <field name="product_id" />
+                                <field name="quantity" />
+                            </list>
+                        </field>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Upload" name="action_upload" type="object" class="oe_highlight" />
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>
