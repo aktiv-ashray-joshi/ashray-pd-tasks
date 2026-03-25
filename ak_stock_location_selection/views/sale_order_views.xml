@@ -6,12 +6,6 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
-            <!--
-                Inject two columns into the order_line list:
-                  • Source Location  – Many2one to stock.location (filtered by available qty)
-                  • Available Qty    – read-only computed qty at that location
-                Placed after the tax_ids column.
-            -->
             <xpath expr="//page//field[@name='order_line']/list/field[@name='tax_ids']" position="after">
                 <field name="available_location_ids" column_invisible="1" />
                 <field

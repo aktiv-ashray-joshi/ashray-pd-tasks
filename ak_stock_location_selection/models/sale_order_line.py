@@ -1,19 +1,14 @@
 from odoo import api, fields, models
 
-
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    # Computed helper: location ids that have available stock for the selected product.
-    # Used as the domain source for location_id so the dropdown only shows
-    # locations where qty > 0 for this product.
     available_location_ids = fields.Many2many(
         comodel_name='stock.location',
         compute='_compute_available_location_ids',
         string='Available Locations',
     )
 
-    # The field that the salesperson picks — stores a stock.location record.
     location_id = fields.Many2one(
         comodel_name='stock.location',
         string='Source Location',
@@ -21,7 +16,6 @@ class SaleOrderLine(models.Model):
         ondelete='set null',
     )
 
-    # Informational field: available qty for the product at the chosen location.
     available_qty_at_location = fields.Float(
         string='Available Qty',
         compute='_compute_available_qty_at_location',
@@ -29,7 +23,6 @@ class SaleOrderLine(models.Model):
         help='Available (unreserved) quantity of this product at the selected source location.',
     )
 
-    # ── compute methods ──────────────────────────────────────────────────────
 
     @api.depends('product_id')
     def _compute_available_location_ids(self):
@@ -58,8 +51,6 @@ class SaleOrderLine(models.Model):
                 )
             else:
                 line.available_qty_at_location = 0.0
-
-    # ── onchange ─────────────────────────────────────────────────────────────
 
     @api.onchange('product_id')
     def _onchange_product_id_reset_location(self):

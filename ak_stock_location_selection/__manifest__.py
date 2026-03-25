@@ -6,9 +6,7 @@
     "category": "Sales",
     "version": "19.0.1.0.0",
     "license": "OPL-1",
-    # any module necessary for this one to work correctly
     "depends": ['sale_management', 'stock'],
-    # always loaded
     "data": [
         "views/sale_order_views.xml"
     ],
