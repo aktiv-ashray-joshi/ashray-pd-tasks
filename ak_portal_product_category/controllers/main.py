@@ -22,7 +22,7 @@ class CustomerPortalProductCategory(CustomerPortal):
 
         searchbar_sortings = {
             'name': {'label': _('Name'), 'order': 'name asc'},
-            'sequence': {'label': _('Sequence'), 'order': 'sequence asc'},
+            'id': {'label': _('Sequence'), 'order': 'id asc'},
         }
         if not sortby:
             sortby = 'name'
@@ -58,7 +58,6 @@ class CustomerPortalProductCategory(CustomerPortal):
 
         values = self._prepare_portal_layout_values()
 
-        # Fetch products in this category
         products = request.env['product.template'].sudo().search([('categ_id', '=', category.id)])
 
         values.update({
