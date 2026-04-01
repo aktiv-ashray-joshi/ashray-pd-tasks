@@ -3,10 +3,17 @@ from odoo.exceptions import UserError
 
 
 class SaleOrder(models.Model):
+    """
+    Inherit Sale Order to handle attachment copying and original order cancellation during duplication.
+    """
     _inherit = "sale.order"
 
     def copy(self, default=None):
-        self.ensure_one()
+        """
+        Duplicate the sale order, copying its attachments and cancelling the original order.
+        :param default: dict: Fields to override during duplication.
+        :return: recordset: The newly created sale order.
+        """
 
         if self.state == "sale":
             raise UserError(
@@ -17,28 +24,17 @@ class SaleOrder(models.Model):
                 )
                 % self.name
             )
+        new_sale_order_id = super().copy(default=default)
 
-        if self.state == "cancel":
-            raise UserError(
-                _(
-                    "Cannot duplicate the cancelled sale order '%s'. "
-                    "Duplicating a cancelled order would result in attempting "
-                    "to cancel it again, which would mislead the system."
-                )
-                % self.name
-            )
-
-        new_order = super().copy(default=default)
-
-        attachments = self.env["ir.attachment"].search(
+        attachment_ids = self.env["ir.attachment"].search(
             [
                 ("res_model", "=", "sale.order"),
                 ("res_id", "=", self.id),
             ]
         )
-        for attachment in attachments:
-            attachment.copy({"res_id": new_order.id})
+        attachment_ids.write({"res_id": new_sale_order_id.id})
+        
+        if self.state !="cancel":
+            self.action_cancel()
 
-        self.action_cancel()
-
-        return new_order
+        return new_sale_order_id
