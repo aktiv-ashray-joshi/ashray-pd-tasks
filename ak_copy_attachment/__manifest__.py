@@ -6,8 +6,9 @@
     'description': """
         This module allows users to also copy the attachments.
     """,
-    'depends': ['base'],
+    'depends': ['base','sale'],
     'data': [],
+    'author': "Aktiv Software PVT. LTD.",
     'installable': True,
     'application': False,
     'license': 'LGPL-3',
