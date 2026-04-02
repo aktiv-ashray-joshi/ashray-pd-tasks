@@ -1,8 +1,11 @@
 from odoo import models,fields,api,Command
 
 class QuotationBulkUpload(models.TransientModel):
-    _name="quotation.bulk.upload"
-    _description="Quotation Bulk Upload Product"
+    """
+    Wizard to bulk upload products to a sale order.
+    """
+    _name = "quotation.bulk.upload"
+    _description = "Quotation Bulk Upload Product"
     
     sale_order_id = fields.Many2one('sale.order')
     
@@ -10,17 +13,17 @@ class QuotationBulkUpload(models.TransientModel):
     
     
     def action_upload(self):
-        print("\n\n\n\n>>>>>>>>>>>>>>>Uploaded<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n\n\n")
-        # order_lines = self.sale_order_id.order_line
-        lines = []
-        for line in self.line_ids:
-            lines.append(Command.create({
-                'product_id' : line.product_id.id,
-                'product_uom_qty' : line.quantity,
-                'price_unit': line.product_id.lst_price
+        """
+        Upload the selected products and quantities to the linked sale order.
+        """
+        order_line_values = []
+        for line_id in self.line_ids:
+            order_line_values.append(Command.create({
+                'product_id': line_id.product_id.id,
+                'product_uom_qty': line_id.quantity,
+                'price_unit': line_id.product_id.lst_price
             }))
-        print("\n\n\n\n>>>>>>>>>>>>>>>Uploaded<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n\n\n",lines)
-        self.sale_order_id.order_line = lines
+        self.sale_order_id.order_line = order_line_values
 
         
            

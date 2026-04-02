@@ -7,7 +7,7 @@
     "version": "19.0.1.0.0",
     "license": "OPL-1",
     # any module necessary for this one to work correctly
-    "depends": ['sale'],
+    "depends": ['sale_management'],
     # always loaded
     "data": [
         "security/ir.model.access.csv",
@@ -15,6 +15,7 @@
         "views/sale_order_views.xml",
         "wizard/quotation_bulk_upload_views.xml",
     ],
+    'author':'Aktiv Software PVT. LTD.',
     "installable": True,
     "application": True,
     "auto_install": False,

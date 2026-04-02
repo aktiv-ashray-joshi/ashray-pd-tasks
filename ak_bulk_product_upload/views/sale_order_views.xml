@@ -7,8 +7,8 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//header//button[@name='action_quotation_send']" position="after">
-                <button string="Bulk Product Upload" name="action_bulk_product_upload" type="object" invisible="state in ['cancel','sale']" class="oe_highlight"/>
-                <button string="Merge Order Lines" name="action_merge_order_lines" invisible="state in ['cancel','sale']" type="object" class="oe_highlight"/>
+                <button string="Bulk Product Upload" name="action_bulk_product_upload" type="object" invisible="state == 'cancel'" class="oe_highlight"/>
+                <button string="Merge Order Lines" name="action_merge_order_lines" invisible="state == 'cancel'" type="object" class="oe_highlight"/>
             </xpath>
         </field>
     </record>
