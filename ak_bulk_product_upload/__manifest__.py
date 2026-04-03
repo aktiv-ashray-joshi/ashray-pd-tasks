@@ -11,6 +11,8 @@
     # always loaded
     "data": [
         "security/ir.model.access.csv",
+        "data/mail_template_data.xml",
+        "data/ir_cron_data.xml",
         "views/res_config_settings_views.xml",
         "views/sale_order_views.xml",
         "wizard/quotation_bulk_upload_views.xml",
