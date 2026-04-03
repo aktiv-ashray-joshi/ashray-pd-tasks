@@ -8,12 +8,8 @@
             <form string="Bulk Product Upload">
                 <sheet>
                     <group>
-                        <field name="line_ids">
-                            <list editable="bottom">
-                                <field name="product_id" />
-                                <field name="quantity" />
-                            </list>
-                        </field>
+                        <field name="product_ids" widget="many2many_tags" />
+                        <field name="quantity" />
                     </group>
                 </sheet>
                 <footer>
