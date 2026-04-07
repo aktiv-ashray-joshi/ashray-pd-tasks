@@ -1,81 +1,88 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-    <!-- Navigation Breadcrumbs -->
     <template id="portal_my_home_menu_product_category"
         name="Portal layout : product category menu entries" inherit_id="portal.portal_breadcrumbs"
         priority="30">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
-            <li id="portal_breadcrumbs_product_category" t-if="page_name == 'product_category'"
-                t-attf-class="breadcrumb-item #{'active ' if not category else ''}">
-                <a t-if="category" t-attf-href="/my/product_categories?{{ keep_query() }}">Product
-                    Categories</a>
+
+            <li t-if="page_name in ('product_category', 'product')"
+                t-attf-class="breadcrumb-item #{'active' if page_name == 'product_category' and not category_id else ''}">
+                <a t-if="category_id or page_name == 'product'" href="/my/product_categories">
+                    Product Categories </a>
                 <t t-else="">Product Categories</t>
             </li>
-            <li t-if="category" class="breadcrumb-item active">
-                <t t-out="category.name" />
+            <li t-if="category_id and page_name in ('product_category', 'product')"
+                t-attf-class="breadcrumb-item #{'active' if page_name == 'product_category' else ''}">
+                <a t-if="page_name == 'product'"
+                    t-attf-href="/my/product_category/#{category_id.id}">
+                    <t t-out="category_id.name" />
+                </a>
+                <t t-else="">
+                    <t t-out="category_id.name" />
+                </t>
+            </li>
+            <li t-if="page_name == 'product' and product_id" class="breadcrumb-item active">
+                <t t-out="product_id.name" />
             </li>
         </xpath>
     </template>
-
-    <!-- Portal Home Card -->
+    <!--  Portal Home Card  -->
     <template id="portal_my_home_product_category" name="Product Categories" customize_show="True"
         inherit_id="portal.portal_my_home" priority="30">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
             <t t-set="portal_client_category_enable" t-value="True" />
+            <style> .o_portal_index_card img[src*="pc.jpeg"] { max-height: 45px; width: auto;
+                object-fit: contain; } </style>
         </xpath>
         <div id="portal_client_category" position="inside">
             <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/ak_portal_product_category/static/src/img/pc.jpeg'" />
                 <t t-set="title">Product Categories</t>
                 <t t-set="url" t-value="'/my/product_categories'" />
                 <t t-set="text">Access all your product categories</t>
-                <t t-set="placeholder_count" t-value="'product_category_count'" />
+                <!--  <t t-set="placeholder_count" t-value="'product_category_count'" />  -->
+                <t t-set="config_card" t-value="True" />
             </t>
         </div>
     </template>
-
-    <!-- List View -->
+    <!--  List View  -->
     <template id="portal_my_product_categories" name="My Product Categories">
         <t t-call="portal.portal_layout">
             <t t-set="breadcrumbs_searchbar" t-value="True" />
-
             <t t-call="portal.portal_searchbar">
                 <t t-set="title">Product Categories</t>
             </t>
-
-            <div t-if="not categories" class="alert alert-warning" role="alert">
-                There are currently no product categories available.
-            </div>
-
-            <t t-if="categories" t-call="portal.portal_table">
+            <div t-if="not category_ids" class="alert alert-warning" role="alert"> There are
+                currently no product categories available. </div>
+            <t t-if="category_ids" t-call="portal.portal_table">
                 <thead>
                     <tr class="active">
                         <th>Category Name</th>
                         <th>Parent Category</th>
                     </tr>
                 </thead>
-                <t t-foreach="categories" t-as="cat">
+                <t t-foreach="category_ids" t-as="category_id">
                     <tr>
                         <td>
-                            <a t-attf-href="/my/product_category/#{cat.id}">
-                                <t t-out="cat.name" />
+                            <a t-attf-href="/my/product_category/#{category_id.id}">
+                                <t t-out="category_id.display_name" />
                             </a>
                         </td>
                         <td>
-                            <span t-field="cat.parent_id.name" />
+                            <span t-field="category_id.parent_id.name" />
                         </td>
                     </tr>
                 </t>
             </t>
         </t>
     </template>
-
-    <!-- Form View -->
+    <!--  Form View  -->
     <template id="portal_product_category_form" name="Product Category Info">
         <t t-call="portal.portal_layout">
             <div class="card mt-3">
+                <!--  FIX 1: text-break prevents long category names from overflowing the header  -->
                 <div class="card-header">
-                    <h3 class="mb-0">Product Category: <t t-out="category.name" /></h3>
+                    <h3 class="mb-0 text-break"> Product Category: <t t-out="category_id.name" />
+                    </h3>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -83,55 +90,66 @@
                             <label>
                                 <strong>Name:</strong>
                             </label>
-                            <div t-field="category.name" />
+                            <div t-field="category_id.name" />
                         </div>
-                        <div class="col-md-6 mb-3" t-if="category.parent_id">
+                        <div class="col-md-6 mb-3" t-if="category_id.parent_id">
                             <label>
                                 <strong>Parent Category:</strong>
                             </label>
-                            <div t-field="category.parent_id.name" />
+                            <div t-field="category_id.parent_id.name" />
                         </div>
                     </div>
                 </div>
-
-                <div class="card-body border-top" t-if="products">
+                <div class="card-body border-top" t-if="product_ids">
                     <h4>Products in this Category</h4>
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th>Image</th>
+                                    <!--  Image hidden on xs (below 576px), visible sm+  -->
+                                    <th class="d-none d-sm-table-cell">Image</th>
                                     <th>Product Name</th>
+                                    <!--  Price always visible  -->
                                     <th>Price</th>
                                     <th class="text-end">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <t t-foreach="products" t-as="product">
+                                <t t-foreach="product_ids" t-as="product_id">
                                     <tr>
-                                        <td>
+                                        <!--  Image td hidden on xs, matches th above  -->
+                                        <td class="d-none d-sm-table-cell">
                                             <img
-                                                t-attf-src="/web/image/product.template/#{product.id}/image_128"
+                                                t-attf-src="/web/image/product.template/#{product_id.id}/image_128"
                                                 class="img-thumbnail" style="max-height: 50px;"
                                                 alt="Product Image" />
                                         </td>
                                         <td class="align-middle">
-                                            <a t-attf-href="/shop/product/#{product.id}">
-                                                <t t-out="product.name" />
+                                            <!--  Portal route keeps breadcrumb chain intact  -->
+                                            <a t-attf-href="/my/product/#{product_id.id}">
+                                                <t t-out="product_id.name" />
                                             </a>
                                         </td>
+                                        <!--  Price always visible  -->
                                         <td class="align-middle">
-                                            <span t-field="product.list_price"
-                                                t-options='{"widget": "monetary", "display_currency": product.currency_id}' />
+                                            <span t-field="product_id.list_price" t-options="{'widget': 'monetary', 'display_currency': product_id.currency_id}" />
                                         </td>
                                         <td class="align-middle text-end">
                                             <form
-                                                t-attf-action="/my/product_category/#{category.id}/remove_category/#{product.id}"
+                                                t-attf-id="remove_form_#{product_id.id}"
+                                                t-attf-action="/my/product_category/#{category_id.id}/remove_category/#{product_id.id}"
                                                 method="POST">
                                                 <input type="hidden" name="csrf_token"
                                                     t-att-value="request.csrf_token()" />
-                                                <button type="submit" class="btn btn-sm btn-danger">
-                                                    <i class="fa fa-times"></i> Remove </button>
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-sm btn-danger ak_product_remove_btn"
+                                                    t-attf-data-form-id="remove_form_#{product_id.id}"
+                                                    t-attf-data-product-name="#{product_id.name}">
+                                                    <i class="fa fa-times" />
+                                                    <!--  "Remove" label hidden on xs, visible sm+  -->
+                                                    <span class="d-none d-sm-inline"> Remove</span>
+                                                </button>
                                             </form>
                                         </td>
                                     </tr>
@@ -140,15 +158,60 @@
                         </table>
                     </div>
                 </div>
-
-                <div class="card-footer text-end">
-                    <a href="/my/product_categories" class="btn btn-secondary me-2">Back to
-                        Categories</a>
-                    <a t-attf-href="/shop/category/#{category.id}" class="btn btn-primary"
-                        t-if="category">View Products in Shop</a>
+                <div class="card-footer d-flex flex-wrap gap-2 justify-content-end">
+                    <a href="/my/product_categories" class="btn btn-secondary">Back to Categories</a>
+                    <a t-attf-href="/shop" class="btn btn-primary" t-if="category_id">View Products
+                        in Shop</a>
                 </div>
             </div>
         </t>
     </template>
-
+    <template id="portal_product_detail" name="Portal Product Detail">
+        <t t-call="portal.portal_layout">
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h3 class="mb-0 text-break">
+                        <t t-out="product_id.name" />
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!--  Product image  -->
+                        <div class="col-12 col-md-4 text-center mb-3">
+                            <img t-attf-src="/web/image/product.template/#{product_id.id}/image_512"
+                                class="img-fluid rounded shadow-sm" alt="Product Image" />
+                        </div>
+                        <!--  Product details  -->
+                        <div class="col-12 col-md-8">
+                            <dl class="row">
+                                <dt class="col-sm-4">Category</dt>
+                                <dd class="col-sm-8">
+                                    <a t-attf-href="/my/product_category/#{category_id.id}">
+                                        <t t-out="category_id.name" />
+                                    </a>
+                                </dd>
+                                <dt class="col-sm-4">Price</dt>
+                                <dd class="col-sm-8">
+                                    <span t-field="product_id.list_price" t-options="{'widget': 'monetary', 'display_currency': product_id.currency_id}" />
+                                </dd>
+                                <t t-if="product_id.description_sale">
+                                    <dt class="col-sm-4">Description</dt>
+                                    <dd class="col-sm-8">
+                                        <span t-field="product_id.description_sale" />
+                                    </dd>
+                                </t>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex flex-wrap gap-2 justify-content-end">
+                    <a t-attf-href="/my/product_category/#{category_id.id}"
+                        class="btn btn-secondary"> ← Back to <t t-out="category_id.name" />
+                    </a>
+                    <a t-attf-href="/shop/product/#{product_id.id}" class="btn btn-primary"
+                        target="_blank"> View in Shop </a>
+                </div>
+            </div>
+        </t>
+    </template>
 </odoo>

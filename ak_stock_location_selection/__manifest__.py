@@ -10,6 +10,7 @@
     "data": [
         "views/sale_order_views.xml"
     ],
+    'author':'Aktiv Software PVT. LTD.',
     "installable": True,
     "application": True,
     "auto_install": False,

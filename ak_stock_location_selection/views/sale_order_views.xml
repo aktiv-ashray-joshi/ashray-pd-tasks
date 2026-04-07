@@ -12,13 +12,7 @@
                     name="location_id"
                     optional="show"
                     options="{'no_create': True, 'no_open': True}"
-                />
-                <field
-                    name="available_qty_at_location"
-                    string="Avail. Qty"
-                    optional="show"
-                    readonly="1"
-                />
+                    context="{'show_available_qty': True, 'product_id': product_id}"/>
             </xpath>
         </field>
     </record>
