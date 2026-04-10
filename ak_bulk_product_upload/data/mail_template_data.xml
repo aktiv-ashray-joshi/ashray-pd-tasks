@@ -5,7 +5,7 @@
             <field name="name">Sale Order: Merged Order Lines Notification</field>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="subject">Order lines have been merged in {{ object.name }}</field>
-            <field name="email_to">{{ ','.join(object.company_id.notify_partner_ids.mapped('email')) }}</field>
+           <field name="email_to">{{ ','.join((object.company_id.notify_partner_ids.mapped('email')) + ([object.partner_id.email] if object.partner_id.email else [])) }}</field>
             <field name="description">Notification sent to designated partners when order lines are merged in a sale order.</field>
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">

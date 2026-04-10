@@ -6,10 +6,11 @@
     'description': """
         Splits Manufacturing in a single unit.
     """,
-    'depends': ['mrp', 'sale_mrp'],
+    'depends': ['mrp', 'sale_mrp','stock','sale_management'],
     'data': [
         
     ],
+    'author':'Aktiv Software PVT. LTD.',
     'installable': True,
     'application': False,
     'license': 'LGPL-3',

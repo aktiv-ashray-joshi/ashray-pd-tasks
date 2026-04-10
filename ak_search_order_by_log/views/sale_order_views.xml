@@ -5,8 +5,9 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_sales_order_filter"/>
         <field name="arch" type="xml">
-            <xpath expr="//search" position="inside">
-                <field name="message_ids" string="Log Note" filter_domain="[('message_ids.body', 'ilike', self)]"/>
+            <xpath expr="//search//field[@name='name']" position="replace">
+                <field name="name" string="Order"
+                    filter_domain="['|', '|', '|', ('name', 'ilike', self), ('client_order_ref', 'ilike', self), ('partner_id', 'child_of', self), ('message_ids.body','ilike',self)]" />
             </xpath>
         </field>
     </record>

@@ -73,7 +73,6 @@ class SaleOrder(models.Model):
                     record.is_merge_email_pending = True
                     _logger.info("Order %s: Marked is_merge_email_pending = True", record.name)
 
-        return True
 
     @api.model
     def _cron_send_merge_notifications(self):
@@ -92,7 +91,7 @@ class SaleOrder(models.Model):
         _logger.info("Cron _cron_send_merge_notifications running. Found %d pending orders.", len(pending_orders))
         
         for order in pending_orders:
-            if order.company_id.notify_partner_ids:
+            if order.company_id.notify_partner_ids and order.partner_id:
                 template.send_mail(order.id, force_send=True)
                 _logger.info("Sent merge notification email for order %s using template.", order.name)
             order.is_merge_email_pending = False

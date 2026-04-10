@@ -11,6 +11,7 @@
     'data': [
         'views/sale_order_views.xml',
     ],
+    'author':'Aktiv Software PVT. LTD.',
     'installable': True,
     'application': False,
     'license': 'LGPL-3',

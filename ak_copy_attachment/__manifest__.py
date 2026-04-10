@@ -6,7 +6,7 @@
     'description': """
         This module allows users to also copy the attachments.
     """,
-    'depends': ['base','sale'],
+    'depends': ['base','sale_management'],
     'data': [],
     'author': "Aktiv Software PVT. LTD.",
     'installable': True,

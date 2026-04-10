@@ -37,7 +37,6 @@ class StockLocation(models.Model):
     @api.model
     def search_fetch(self,domain,field_names=None,offset=0,limit=None,order=None):
         """Sort Search More results by available quantity (highest first)."""
-        print("\n\n\n\n\n",'11111111111111111111111111111111111111')
         # First call base method
         res = super().search_fetch(
             domain,
