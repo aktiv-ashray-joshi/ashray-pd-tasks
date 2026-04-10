@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template">
+    <t t-name="ak_pos_reciept_customization.Orderline" t-inherit="point_of_sale.Orderline"
+        t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('text-wrap', 'd-inline')]//t[@t-esc='vals.name']"
+            position="after">
+            <t t-if="vals.isReceipt and line.product_id.default_code"> [<t
+                    t-esc="line.product_id.default_code" />] </t>
+        </xpath>
+    </t>
+</templates>
