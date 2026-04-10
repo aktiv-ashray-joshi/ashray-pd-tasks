@@ -26,7 +26,6 @@ class CustomerPortalProductCategory(CustomerPortal):
         """
         values = self._prepare_portal_layout_values()
         ProductCategory = request.env['product.category']
-        print("/n/n/n/n>>>>>>>>>>>>",values)
         domain = []
 
         searchbar_sortings = {
@@ -52,9 +51,8 @@ class CustomerPortalProductCategory(CustomerPortal):
         values.update({
             'category_ids': category_ids,
             'page_name': 'product_category',
-            'category_id': False,       # breadcrumb: no active category on list page
-            'product_id': False,        # breadcrumb: no active product on list page
-            'pager': pager,
+            'category_id': False,
+            'product_id': False,
             'default_url': '/my/product_categories',
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,

@@ -2,10 +2,18 @@ from collections import defaultdict
 from odoo import api, models, SUPERUSER_ID
 
 class StockRule(models.Model):
+    """
+    Inherit Stock Rule to split manufacturing orders into individual units for sale-triggered procurements.
+    """
     _inherit = 'stock.rule'
 
     @api.model
     def _run_manufacture(self, procurements):
+        """
+        Specialized manufacture runner that splits MOs for sale orders.
+        :param procurements: list: List of procurement tuples (procurement, rule).
+        :return: bool: Result of the manufacture process.
+        """
         sale_procs = []
         regular_procs = []
         for p, rule in procurements:
@@ -24,6 +32,7 @@ class StockRule(models.Model):
             return res
             
         new_productions_values_by_company = defaultdict(lambda: defaultdict(list))
+        print(new_productions_values_by_company, 'new_productions_values_by_company')
         for procurement, rule in sale_procs:
             if procurement.product_uom.compare(procurement.product_qty, 0) <= 0:
                 continue
@@ -46,10 +55,10 @@ class StockRule(models.Model):
 
         for company_id in new_productions_values_by_company:
             productions_vals_list = new_productions_values_by_company[company_id]['values']
-            productions = self.env['mrp.production'].with_user(SUPERUSER_ID).sudo().with_company(company_id).create(productions_vals_list)
-            for mo in productions:
-                if self._should_auto_confirm_procurement_mo(mo):
-                    mo.action_confirm()
-            productions._post_run_manufacture(new_productions_values_by_company[company_id]['procurements'])
+            production_ids = self.env['mrp.production'].with_user(SUPERUSER_ID).sudo().with_company(company_id).create(productions_vals_list)
+            for production_id in production_ids:
+                if self._should_auto_confirm_procurement_mo(production_id):
+                    production_id.action_confirm()
+            production_ids._post_run_manufacture(new_productions_values_by_company[company_id]['procurements'])
             
         return res

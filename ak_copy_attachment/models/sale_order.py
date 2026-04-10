@@ -10,7 +10,7 @@ class SaleOrder(models.Model):
 
     def copy(self, default=None):
         """
-        Duplicate the sale order, copying its attachments and cancelling the original order.
+        Duplicate the sale order, copying its attachments, moving log notes, and cancelling the original order.
         :param default: dict: Fields to override during duplication.
         :return: recordset: The newly created sale order.
         """
@@ -24,6 +24,7 @@ class SaleOrder(models.Model):
                 )
                 % self.name
             )
+
         new_sale_order_id = super().copy(default=default)
 
         attachment_ids = self.env["ir.attachment"].search(
@@ -33,8 +34,10 @@ class SaleOrder(models.Model):
             ]
         )
         attachment_ids.write({"res_id": new_sale_order_id.id})
-        
-        if self.state !="cancel":
+
+        self.message_ids.write({"res_id": new_sale_order_id.id})
+
+        if self.state != "cancel":
             self.action_cancel()
 
         return new_sale_order_id
