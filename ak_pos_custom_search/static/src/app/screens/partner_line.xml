@@ -1,22 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<templates id="template" xml:space="preserve">
-    <t t-name="ak_pos_custom_search.PartnerLine" t-inherit="point_of_sale.PartnerLine" t-inherit-mode="extension">
+<templates id="template">
+    <t t-name="ak_pos_custom_search.PartnerLine" t-inherit="point_of_sale.PartnerLine"
+        t-inherit-mode="extension">
 
-        <xpath expr="//div[hasclass('partner-line-email') and hasclass('p-1')]" position="before">
-            <div t-if="props.partner.ak_customer_code">
-                <span class="text-break">Customer Code: <t t-esc="props.partner.ak_customer_code"/></span>
+        <!-- For SMALL screens (div-based) -->
+        <xpath expr="//div[hasclass('partner-line-email')]" position="before">
+            <div class="partner-line-code p-1" t-if="props.partner.ak_customer_code">
+                <span class="ms-2" t-esc="props.partner.ak_customer_code" />
             </div>
         </xpath>
 
+        <!-- For LARGE screens (table-based) -->
         <xpath expr="//td[hasclass('partner-line-email')]" position="before">
-            <td class="align-middle">
-                <div t-if="props.partner.ak_customer_code" class="d-flex align-items-center">
-                    <div style="font-size:0.85em; font-weight:bold;">
-                       Customer Code: <t t-esc="props.partner.ak_customer_code"/>
-                    </div>
+            <td class="partner-line-code  text-break w-50">
+                <div t-if="props.partner.ak_customer_code">
+                    <div t-esc="props.partner.ak_customer_code" />
                 </div>
             </td>
         </xpath>
 
     </t>
 </templates>
+<!-- <?xml version="1.0" encoding="UTF-8"?>
+<templates id="template">
+    <t t-name="ak_pos_custom_search.PartnerLine" t-inherit="point_of_sale.PartnerLine"
+        t-inherit-mode="extension">
+
+        <xpath expr="//div[hasclass('partner-line-email') and hasclass('p-1')]" position="before">
+            <div t-if="props.partner.ak_customer_code">
+                <span style="word-break: break-all; overflow-wrap: break-word; white-space: normal;">
+                    <t t-esc="props.partner.ak_customer_code" />
+                </span>
+            </div>
+        </xpath>
+
+        <xpath expr="//td[hasclass('partner-line-email')]" position="before">
+            <td class="align-middle"
+                style="max-width: 120px; word-break: break-all; overflow-wrap: break-word; white-space: normal;">
+                <div t-if="props.partner.ak_customer_code">
+                    <t t-esc="props.partner.ak_customer_code" />
+                </div>
+            </td>
+        </xpath>
+
+    </t>
+</templates> -->
