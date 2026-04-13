@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template">
-    <t t-name="ak_pos_reciept_customization.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+    <t t-name="ak_pos_reciept_customization.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader"
+        t-inherit-mode="extension">
         <xpath expr="//div[@t-if='order.partner_id.vat']" position="after">
-            <div t-if="order.partner_id.ak_customer_code">
+            <div t-if="order.partner_id.ak_customer_code"
+                style="white-space: normal; word-break: break-all; overflow-wrap: break-word;">
                 Customer Code: <span t-esc="order.partner_id.ak_customer_code" />
             </div>
         </xpath>
