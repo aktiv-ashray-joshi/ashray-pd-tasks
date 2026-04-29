@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template">
+    <t t-name="ak_pos_invoice.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader"
+        t-inherit-mode="extension">
+        <xpath expr="//div[@t-if='order.partner_id.vat']" position="after">
+            <div t-if="order.invoiceName" style="white-space: normal; word-break: break-all; overflow-wrap: break-word;">
+                Invoice: <span t-esc="order.invoiceName" />
+            </div>
+        </xpath>
+    </t>
+</templates>
