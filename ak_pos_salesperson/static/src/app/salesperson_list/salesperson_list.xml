@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ak_pos_salesperson.SalespersonList">
+        <Dialog bodyClass="'partner-list p-0'" contentClass="'h-100'">
+            <t t-set-slot="header">
+                <button class="btn btn-primary btn-lg lh-lg me-2" role="img" aria-label="Add a Salesperson" t-on-click="createSalesperson">Create
+                </button>
+                <span class="modal-title fs-4">Select Salesperson</span>
+                <Input tModel="[state, 'query']"
+                    class="'ms-auto'"
+                    isSmall="ui.isSmall"
+                    placeholder.translate="Search Salespersons..."
+                    icon="{type: 'fa', value: 'fa-search'}"
+                    autofocus="true"
+                    debounceMillis="100" />
+            </t>
+            <div class="h-100">
+                <table class="table table-hover">
+                    <tbody class="h-100">
+                        <t t-foreach="filteredSalespersons" t-as="user" t-key="user.id">
+                            <tr class="partner-line partner-info" role="button" t-att-class="{'selected': props.currentSalespersonId === user.id}" t-att-data-id="user.id"
+                                t-on-click="() => this.clickSalesperson(user)">
+                                <td class="text-break w-25 align-middle">
+                                    <b t-esc="user.name or ''" />
+                                </td>
+                                <td class="partner-line-email w-100">
+                                    <div t-if="user.phone">
+                                        <i class="fa fa-fw fa-phone me-2"/><t t-esc="user.phone"/>
+                                    </div>
+                                    <div t-if="user.email" class="email-field d-flex align-items-start">
+                                        <i class="fa fa-fw fa-paper-plane-o me-2 lh-base flex-shrink-0"/><span class="text-break" t-esc="user.email" />
+                                    </div>
+                                </td>
+                                <td class="edit-partner-button-cell align-middle pe-0">
+                                    <button t-if="props.currentSalespersonId === user.id" t-on-click.stop="() => this.clickUnselect()" class="unselect-tag fs-5 btn btn-light lh-lg border d-inline-flex align-items-center me-2">
+                                        <i class="fa fa-times me-1"></i>
+                                        <span>UNSELECT</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+                <div class="text-center" t-if="!filteredSalespersons.length">
+                    <div class="text-muted mt-5">
+                        <i class="fa fa-users fa-3x"></i>
+                        <p class="mt-3">No salespersons found.</p>
+                    </div>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <div class="d-flex flex-row gap-2 w-100">
+                    <button class="btn btn-secondary btn-lg lh-lg flex-fill" t-on-click="() => props.close()">Discard</button>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>
