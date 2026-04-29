@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_inherit_pos_salesperson" model="ir.ui.view">
+        <field name="name">res.users.form.inherit.pos.salesperson</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="pos_salesperson" string="Point of Sale">
+                    <group>
+                        <field name="is_pos_salesperson"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_users_form_pos_salesperson" model="ir.ui.view">
+        <field name="name">res.users.form.pos.salesperson</field>
+        <field name="model">res.users</field>
+        <field name="priority" eval="100"/>
+        <field name="arch" type="xml">
+            <form string="Salesperson">
+                <sheet>
+                    <group>
+                        <field name="name" required="1"/>
+                        <field name="login" required="1"/>
+                        <field name="email"/>
+                        <field name="phone"/>
+                        <field name="is_pos_salesperson" invisible="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="res_users_action_edit_pos_salesperson" model="ir.actions.act_window">
+        <field name="name">Create Salesperson</field>
+        <field name="res_model">res.users</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="view_users_form_pos_salesperson"/>
+        <field name="context">{'pos_salesperson_manage': True, 'default_is_pos_salesperson': True}</field>
+    </record>
+</odoo>
