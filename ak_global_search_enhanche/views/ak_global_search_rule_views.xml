@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ak_global_search_rule_tree" model="ir.ui.view">
+        <field name="name">ak.global.search.rule.tree</field>
+        <field name="model">ak.global.search.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ak_global_search_rule_form" model="ir.ui.view">
+        <field name="name">ak.global.search.rule.form</field>
+        <field name="model">ak.global.search.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="active"/>
+                        <field name="sequence"/>
+                        <field name="model_id"/>
+                        <field name="name"/>
+                        <field name="field_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ak_global_search_rule" model="ir.actions.act_window">
+        <field name="name">Global Search Rules</field>
+        <field name="res_model">ak.global.search.rule</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="menu_ak_global_search_root"
+        name="Global Search"
+        parent="base.menu_administration"
+        groups="base.group_system"
+    />
+    <menuitem
+        id="menu_ak_global_search_rules"
+        name="Rules"
+        parent="menu_ak_global_search_root"
+        action="action_ak_global_search_rule"
+        groups="base.group_system"
+    />
+</odoo>

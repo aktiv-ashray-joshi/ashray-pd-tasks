@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ak_global_search_rule_system,ak.global.search.rule system,model_ak_global_search_rule,base.group_system,1,1,1,1
+
