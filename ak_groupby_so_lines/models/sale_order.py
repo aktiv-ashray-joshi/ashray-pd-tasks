@@ -34,9 +34,18 @@ class SaleOrder(models.Model):
         return self.order_line.filtered(lambda l: not self._is_excluded_from_category_grouping(l) and l.product_id)
 
     def _get_excluded_lines(self):
+        """
+        This function returns the order lines that are excluded from category grouping.
+        :return: The `_get_excluded_lines` method is returning the order lines that are filtered based on
+        the `_is_excluded_from_category_grouping` method.
+        """
         return self.order_line.filtered(self._is_excluded_from_category_grouping)
 
     def _groupby_so_lines_by_categ(self):
+        """
+        This function iterates through orders and applies category grouping if certain conditions are
+        met.
+        """
         for order_id in self:
             if self.env.context.get("ak_groupby_so_lines_skip"):
                 continue
@@ -45,6 +54,12 @@ class SaleOrder(models.Model):
             order_id._apply_category_grouping()
 
     def _apply_category_grouping(self):
+        """
+        The function `_apply_category_grouping` retrieves eligible product lines and returns if none are
+        found.
+        :return: If there are no eligible product lines, the function will return without performing any
+        further actions.
+        """
         eligible_lines = self._get_eligible_product_lines()
         if not eligible_lines:
             return
@@ -132,11 +147,31 @@ class SaleOrder(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        """
+        The function creates multiple records and groups sales order lines by category.
+        
+        :param vals_list: The `vals_list` parameter in the `create` method is a list of dictionaries
+        where each dictionary represents the values for creating a new record in the model. Each
+        dictionary in the list corresponds to a separate record that needs to be created
+        :return: The method `create` is returning the `order_ids` after calling the
+        `_groupby_so_lines_by_categ()` method on them.
+        """
         order_ids = super().create(vals_list)
         order_ids._groupby_so_lines_by_categ()
         return order_ids
 
     def write(self, vals):
+        """
+        The function writes values, calls a method to group sales order lines by category, and returns
+        the result.
+        
+        :param vals: The `vals` parameter in the `write` method typically refers to a dictionary
+        containing the fields and values that you want to update for the record. When you call the
+        `write` method on a record in Odoo, you pass a dictionary of field-value pairs to update the
+        record with the new
+        :return: The `res` variable is being returned, which contains the result of calling the `write`
+        method of the superclass using the `super()` function.
+        """
         res = super().write(vals)
         self._groupby_so_lines_by_categ()
         return res
